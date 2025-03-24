@@ -1,8 +1,34 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentFlow.Core", "FluentFlow.Core\FluentFlow.Core.csproj", "{79211AB9-1240-493F-8304-1F836D5AB0BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentFlow.Provider", "FluentFlow.Provider\FluentFlow.Provider.csproj", "{578C9B7A-C336-4972-A626-15C661506ACA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentFlow.Provider.Postgres", "FluentFlow.Provider.Postgres\FluentFlow.Provider.Postgres.csproj", "{E3EC345A-E1A7-4267-B7FD-73D17AEF87A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentFlow.Console", "FluentFlow.Console\FluentFlow.Console.csproj", "{8AA0DF1E-9D26-4561-B54B-49ED27F2CEBF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{79211AB9-1240-493F-8304-1F836D5AB0BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79211AB9-1240-493F-8304-1F836D5AB0BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79211AB9-1240-493F-8304-1F836D5AB0BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79211AB9-1240-493F-8304-1F836D5AB0BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{578C9B7A-C336-4972-A626-15C661506ACA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{578C9B7A-C336-4972-A626-15C661506ACA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{578C9B7A-C336-4972-A626-15C661506ACA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{578C9B7A-C336-4972-A626-15C661506ACA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3EC345A-E1A7-4267-B7FD-73D17AEF87A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3EC345A-E1A7-4267-B7FD-73D17AEF87A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3EC345A-E1A7-4267-B7FD-73D17AEF87A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3EC345A-E1A7-4267-B7FD-73D17AEF87A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AA0DF1E-9D26-4561-B54B-49ED27F2CEBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AA0DF1E-9D26-4561-B54B-49ED27F2CEBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AA0DF1E-9D26-4561-B54B-49ED27F2CEBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AA0DF1E-9D26-4561-B54B-49ED27F2CEBF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
