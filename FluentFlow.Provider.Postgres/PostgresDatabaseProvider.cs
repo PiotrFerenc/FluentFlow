@@ -83,7 +83,7 @@ namespace FluentFlow.Provider.Postgres
                     FROM pg_attribute AS a
                     WHERE a.attnum > 0 AND NOT a.attisdropped
                 ) AS additional_info
-                ON column_name = column_name  -- Tu możesz zoptymalizować w razie potrzeby
+                ON column_name = column_name  
                 WHERE table_name = @TableName;";
 
             await using var command = new NpgsqlCommand(query, _connection);
