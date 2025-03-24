@@ -8,8 +8,20 @@ public interface IDatabaseProvider
     Task<IEnumerable<Column>> GetColumns(Table table);
 }
 
-public record Column(string Name, string Type, bool IsPrimaryKey, bool IsIdentity, bool IsNullable, bool IsUnique);
+public record Name(string Value);
 
-public record Database(string Name);
+public record Type(string Value);
 
-public record Table(string Name);
+public record IsPrimaryKey(bool Value);
+
+public record IsIdentity(bool Value);
+
+public record IsNullable(bool Value);
+
+public record IsUnique(bool Value);
+
+public record Column(Name Name, Type Type, IsPrimaryKey IsPrimaryKey, IsIdentity IsIdentity, IsNullable IsNullable, IsUnique IsUnique);
+
+public record Database(Name Name);
+
+public record Table(Name Name);
