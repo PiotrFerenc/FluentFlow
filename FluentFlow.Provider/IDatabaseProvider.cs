@@ -2,11 +2,13 @@ namespace FluentFlow.Provider;
 
 public interface IDatabaseProvider
 {
-    Task<bool> TryConnect(string connectionString);
+    Task<bool> TryConnect(ConnectionString connectionString);
     Task<IEnumerable<Database>> GetDatabases();
     Task<IEnumerable<Table>> GetTables(Database database);
     Task<IEnumerable<Column>> GetColumns(Table table);
 }
+
+public record ConnectionString(string Value);
 
 public record Name(string Value);
 
