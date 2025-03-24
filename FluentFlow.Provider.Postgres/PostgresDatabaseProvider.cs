@@ -67,7 +67,7 @@ namespace FluentFlow.Provider.Postgres
 
         public async Task<IEnumerable<Column>> GetColumns(Table table)
         {
-            if (_connection == null || _connection.State != ConnectionState.Open)
+            if (_connection is not { State: ConnectionState.Open })
                 throw new InvalidOperationException("Connection to the database has not been established.");
 
             var columns = new List<Column>();
