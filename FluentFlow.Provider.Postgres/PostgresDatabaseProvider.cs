@@ -1,4 +1,6 @@
 using System.Data;
+using System.Data.Common;
+using FluentFlow.Core;
 using Npgsql;
 
 namespace FluentFlow.Provider.Postgres
@@ -7,7 +9,7 @@ namespace FluentFlow.Provider.Postgres
     {
         private NpgsqlConnection? _connection;
 
-        public async Task<bool> TryConnect(ConnectionString connectionString)
+        public async Task<Result<bool>> TryConnect(ConnectionString connectionString)
         {
             try
             {
@@ -17,14 +19,13 @@ namespace FluentFlow.Provider.Postgres
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to connect to PostgreSQL: {ex.Message}");
-                return false;
+                return Result<bool>.Failed($"Failed to connect to PostgreSQL: {ex.Message}");
             }
         }
 
         public async Task<IEnumerable<Database>> GetDatabases()
         {
-            if (_connection == null || _connection.State != ConnectionState.Open)
+            if (_connection is not { State: ConnectionState.Open })
                 throw new InvalidOperationException("Connection to the database has not been established.");
 
             var databases = new List<Database>();

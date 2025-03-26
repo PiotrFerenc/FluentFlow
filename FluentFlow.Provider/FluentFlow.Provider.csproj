@@ -6,4 +6,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\FluentFlow.Core\FluentFlow.Core.csproj" />
+    </ItemGroup>
+
 </Project>

@@ -1,8 +1,11 @@
+using System.Data.Common;
+using FluentFlow.Core;
+
 namespace FluentFlow.Provider;
 
 public interface IDatabaseProvider
 {
-    Task<bool> TryConnect(ConnectionString connectionString);
+    Task<Result<bool>> TryConnect(ConnectionString connectionString);
     Task<IEnumerable<Database>> GetDatabases();
     Task<IEnumerable<Table>> GetTables(Database database);
     Task<IEnumerable<Column>> GetColumns(Table table);
