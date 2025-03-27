@@ -13,7 +13,7 @@ public static class Migrator
         var provider = GetProvider(options.Provider);
         provider.TryConnect(new ConnectionString(options.ConnectionString)).GetAwaiter().GetResult();
         var migrationOptions = new MigrationOptions();
-        var config = Chain(provider, migrationOptions);
+        var config = BuildConfig(provider, migrationOptions);
     }
 
     private static IDatabaseProvider GetProvider(string name) => name switch
@@ -22,7 +22,7 @@ public static class Migrator
         _ => throw new DatabaseProviderNotSupportException(name)
     };
 
-    private static readonly Func<IDatabaseProvider, MigrationOptions, bool> Chain = (provider, options) => GetDatabase!(provider, options) | GetTables!(provider,options);
+    private static readonly Func<IDatabaseProvider, MigrationOptions, bool> BuildConfig = (provider, options) => GetDatabase!(provider, options) | GetTables!(provider,options);
 
     private static readonly Func<IDatabaseProvider, MigrationOptions, bool> GetTables = (provider, options) =>
     {
@@ -44,7 +44,6 @@ return true;
                 .Title("Select database")
                 .MoreChoicesText("[grey](Move up and down to reveal more choices)[/]")
                 .AddChoices(databases.Select(x => x.Name.Value)));
-
 
         options.DatabaseName = databaseName;
         return true;
