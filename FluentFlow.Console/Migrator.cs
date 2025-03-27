@@ -27,23 +27,14 @@ public static class Migrator
     private static readonly Func<IDatabaseProvider, MigrationOptions, bool> GetTables = (provider, options) =>
     {
         var tables = provider.GetTables(new Database(new Name(options.DatabaseName))).GetAwaiter().GetResult();
-var selectedTable = AnsiConsole.Prompt(
-            new SelectionPrompt<string>()
-                .Title("Select table")
-                .MoreChoicesText("[grey](Move up and down to reveal more choices)[/]")
-                .AddChoices(tables.Select(x => x.Name.Value)));
+var selectedTable = AnsiConsole.Prompt(new SelectionPrompt<string>().Title("Select table").MoreChoicesText("[grey](Move up and down to reveal more choices)[/]").AddChoices(tables.Select(x => x.Name.Value)));
 options.TableName = selectedTable;
 return true;
     };
     private static readonly Func<IDatabaseProvider, MigrationOptions, bool> GetDatabase = (provider, options) =>
     {
         var databases = provider.GetDatabases().GetAwaiter().GetResult();
-
-        var databaseName = AnsiConsole.Prompt(
-            new SelectionPrompt<string>()
-                .Title("Select database")
-                .MoreChoicesText("[grey](Move up and down to reveal more choices)[/]")
-                .AddChoices(databases.Select(x => x.Name.Value)));
+        var databaseName = AnsiConsole.Prompt(new SelectionPrompt<string>().Title("Select database").MoreChoicesText("[grey](Move up and down to reveal more choices)[/]").AddChoices(databases.Select(x => x.Name.Value)));
 
         options.DatabaseName = databaseName;
         return true;
