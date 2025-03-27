@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\FluentFlow.Core\FluentFlow.Core.csproj" />
+        <ProjectReference Include="..\FluentFlow.Core\FluentFlow.Core.csproj"/>
     </ItemGroup>
 
 </Project>
