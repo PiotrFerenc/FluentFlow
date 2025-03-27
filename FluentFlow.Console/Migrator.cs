@@ -13,7 +13,7 @@ public static class Migrator
         var provider = GetProvider(options.Provider);
         provider.TryConnect(new ConnectionString(options.ConnectionString)).GetAwaiter().GetResult();
         var migrationOptions = new MigrationOptions();
-        var config = _chain(provider, migrationOptions);
+        var config = Chain(provider, migrationOptions);
     }
 
     private static IDatabaseProvider GetProvider(string name) => name switch
@@ -22,16 +22,26 @@ public static class Migrator
         _ => throw new DatabaseProviderNotSupportException(name)
     };
 
-    private static Func<IDatabaseProvider, MigrationOptions, bool> _chain = (provider, options) => _getDatabase(provider, options);
+    private static readonly Func<IDatabaseProvider, MigrationOptions, bool> Chain = (provider, options) => GetDatabase!(provider, options) | GetTables!(provider,options);
 
-    private static readonly Func<IDatabaseProvider, MigrationOptions, bool> _getDatabase = (provider, options) =>
+    private static readonly Func<IDatabaseProvider, MigrationOptions, bool> GetTables = (provider, options) =>
+    {
+        var tables = provider.GetTables(new Database(new Name(options.DatabaseName))).GetAwaiter().GetResult();
+var selectedTable = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("Select table")
+                .MoreChoicesText("[grey](Move up and down to reveal more choices)[/]")
+                .AddChoices(tables.Select(x => x.Name.Value)));
+options.TableName = selectedTable;
+return true;
+    };
+    private static readonly Func<IDatabaseProvider, MigrationOptions, bool> GetDatabase = (provider, options) =>
     {
         var databases = provider.GetDatabases().GetAwaiter().GetResult();
 
         var databaseName = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("Select database")
-                .PageSize(10)
                 .MoreChoicesText("[grey](Move up and down to reveal more choices)[/]")
                 .AddChoices(databases.Select(x => x.Name.Value)));
 
