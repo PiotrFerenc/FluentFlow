@@ -1,4 +1,3 @@
-using System.Data.Common;
 using FluentFlow.Core;
 
 namespace FluentFlow.Provider;
@@ -9,6 +8,7 @@ public interface IDatabaseProvider
     Task<IEnumerable<Database>> GetDatabases();
     Task<IEnumerable<Table>> GetTables(Database database);
     Task<IEnumerable<Column>> GetColumns(Table table);
+    
 }
 
 public record ConnectionString(string Value);

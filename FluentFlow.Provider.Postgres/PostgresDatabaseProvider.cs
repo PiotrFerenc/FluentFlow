@@ -73,19 +73,23 @@ namespace FluentFlow.Provider.Postgres
 
             var columns = new List<Column>();
 
-            string query = $@"
-                SELECT column_name, data_type, is_nullable, is_identity, is_primary 
-                FROM information_schema.columns
-                LEFT JOIN (
-                    SELECT
-                        a.attname AS column_name,
-                        't'::boolean AS is_identity,
-                        't'::boolean AS is_primary
-                    FROM pg_attribute AS a
-                    WHERE a.attnum > 0 AND NOT a.attisdropped
-                ) AS additional_info
-                ON column_name = column_name  
-                WHERE table_name = @TableName;";
+            string query = $@"SELECT
+    c.column_name,
+    c.data_type,
+    c.is_nullable,
+    ai.is_identity,
+    ai.is_primary
+FROM information_schema.columns AS c
+         LEFT JOIN (
+    SELECT
+        a.attname AS column_name,
+        't'::boolean AS is_identity,
+        't'::boolean AS is_primary
+    FROM pg_attribute AS a
+    WHERE a.attnum > 0 AND NOT a.attisdropped
+) AS ai
+                   ON c.column_name = ai.column_name
+WHERE c.table_name = 'test_table';";
 
             await using var command = new NpgsqlCommand(query, _connection);
             command.Parameters.AddWithValue("TableName", table.Name.Value);

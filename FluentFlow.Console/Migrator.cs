@@ -3,6 +3,7 @@ using FluentFlow.Console.Model;
 using FluentFlow.Provider;
 using FluentFlow.Provider.Postgres;
 using Spectre.Console;
+using Table = FluentFlow.Provider.Table;
 
 namespace FluentFlow.Console;
 
@@ -13,7 +14,10 @@ public static class Migrator
         var provider = GetProvider(options.Provider);
         provider.TryConnect(new ConnectionString(options.ConnectionString)).GetAwaiter().GetResult();
         var migrationOptions = new MigrationOptions();
-        var config = BuildConfig(provider, migrationOptions);
+        if (BuildConfig(provider, migrationOptions))
+        {
+            
+        }
     }
 
     private static IDatabaseProvider GetProvider(string name) => name switch
@@ -22,7 +26,13 @@ public static class Migrator
         _ => throw new DatabaseProviderNotSupportException(name)
     };
 
-    private static readonly Func<IDatabaseProvider, MigrationOptions, bool> BuildConfig = (provider, options) => GetDatabase!(provider, options) | GetTables!(provider, options);
+    private static readonly Func<IDatabaseProvider, MigrationOptions, bool> BuildConfig = (provider, options) => GetDatabase!(provider, options) | GetTables!(provider, options) | GetColumns!(provider, options);
+
+    private static readonly Func<IDatabaseProvider, MigrationOptions, bool> GetColumns = (provider, options) =>
+    {
+        options.Columns = provider.GetColumns(new Table(new Name(options.TableName))).GetAwaiter().GetResult();
+        return true;
+    };
 
     private static readonly Func<IDatabaseProvider, MigrationOptions, bool> GetTables = (provider, options) =>
     {
