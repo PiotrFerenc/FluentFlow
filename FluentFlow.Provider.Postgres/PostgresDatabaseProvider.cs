@@ -100,7 +100,7 @@ WHERE c.table_name = 'TableName';";
 
                 columns.Add(new Column(
                     new Name(reader.GetString(0)),
-                    new Type(reader.GetString(1)),
+                    new Type(MapType(reader.GetString(1))),
                     new IsNullable(reader.GetString(2) == "YES"),
                     new Length(maxLength)
                 ));
@@ -108,5 +108,32 @@ WHERE c.table_name = 'TableName';";
 
             return columns;
         }
+
+        public ColumnType MapType(string type) => type switch
+        {
+            "character varying" => ColumnType.Varchar,
+            "character" => ColumnType.Char,
+            "text" => ColumnType.Text,
+            "integer" => ColumnType.Integer,
+            "bigint" => ColumnType.BigInt,
+            "smallint" => ColumnType.SmallInt,
+            "numeric" => ColumnType.Numeric,
+            "decimal" => ColumnType.Decimal,
+            "real" => ColumnType.Real,
+            "double precision" => ColumnType.DoublePrecision,
+            "boolean" => ColumnType.Boolean,
+            "date" => ColumnType.Date,
+            "timestamp without time zone" => ColumnType.TimestampWithoutTimeZone,
+            "timestamp with time zone" => ColumnType.TimestampWithTimeZone,
+            "time without time zone" => ColumnType.TimeWithoutTimeZone,
+            "time with time zone" => ColumnType.TimeWithTimeZone,
+            "json" => ColumnType.Json,
+            "jsonb" => ColumnType.Jsonb,
+            "uuid" => ColumnType.Uuid,
+            "bytea" => ColumnType.Bytea,
+            "array" => ColumnType.Array,
+            "interval" => ColumnType.Interval,
+            _ => throw new InvalidOperationException($"Unknown type: {type}")
+        };
     }
 }
