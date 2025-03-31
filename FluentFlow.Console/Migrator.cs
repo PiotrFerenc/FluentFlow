@@ -16,13 +16,18 @@ public static class Migrator
         var migrationOptions = new MigrationOptions();
         if (BuildConfig(provider, migrationOptions))
         {
-            
         }
     }
 
     private static IDatabaseProvider GetProvider(string name) => name switch
     {
         "postgres" => new PostgresDatabaseProvider(),
+        _ => throw new DatabaseProviderNotSupportException(name)
+    };
+
+    private static IColumnMapper GetMapper(string name) => name switch
+    {
+        "postgres" => new PostgresColumnMapper(),
         _ => throw new DatabaseProviderNotSupportException(name)
     };
 
