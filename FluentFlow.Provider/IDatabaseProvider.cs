@@ -28,4 +28,7 @@ public record Length(int? Value);
 
 public record Database(Name Name);
 
-public record Table(Name Name);
+public record Table(Name Name)
+{
+    public override string ToString() => Name.Value;
+};

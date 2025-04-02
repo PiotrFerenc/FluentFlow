@@ -77,26 +77,23 @@ namespace FluentFlow.Provider.Postgres
     c.column_name,
     c.data_type,
     c.is_nullable,
-    ai.is_identity,
-    ai.is_primary,
-    c.character_maximum_length 
+    c.character_maximum_length
 FROM information_schema.columns AS c
          LEFT JOIN (
     SELECT
-        a.attname AS column_name,
+        a.attname AS column_name
     FROM pg_attribute AS a
     WHERE a.attnum > 0 AND NOT a.attisdropped
 ) AS ai
                    ON c.column_name = ai.column_name
-WHERE c.table_name = 'TableName';";
+WHERE c.table_name = '{table.Name.Value}';";
 
             await using var command = new NpgsqlCommand(query, _connection);
-            command.Parameters.AddWithValue("TableName", table.Name.Value);
 
             await using var reader = await command.ExecuteReaderAsync();
             while (await reader.ReadAsync())
             {
-                int? maxLength = reader.IsDBNull(5) ? (int?)null : reader.GetInt32(5);
+                int? maxLength = reader.IsDBNull(3) ? (int?)null : reader.GetInt32(3);
 
                 columns.Add(new Column(
                     new Name(reader.GetString(0)),
