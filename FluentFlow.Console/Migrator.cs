@@ -1,8 +1,11 @@
 using FluentFlow.Console.Exceptions;
 using FluentFlow.Console.Model;
+using FluentFlow.Core.Code;
 using FluentFlow.Provider;
 using FluentFlow.Provider.Postgres;
+using Microsoft.CodeAnalysis;
 using Spectre.Console;
+using Name = FluentFlow.Provider.Name;
 using Table = FluentFlow.Provider.Table;
 
 namespace FluentFlow.Console;
@@ -16,6 +19,13 @@ public static class Migrator
         var migrationOptions = new MigrationOptions();
         if (BuildConfig(provider, migrationOptions))
         {
+            var migration = new FluentBuilder("Create.Table", true);
+            foreach (var column in migrationOptions.Columns)
+            {
+                migration.AddStep(column.Name.ToString());
+            }
+
+            System.Console.WriteLine(migration.Build().NormalizeWhitespace());
         }
     }
 

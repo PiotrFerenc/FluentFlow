@@ -15,7 +15,6 @@ public static class MethodBuilder
                     SyntaxFactory.Identifier(set.Name))
                 .WithModifiers(SyntaxFactory.TokenList(set.Modifiers.Select(SyntaxFactory.Token)))
                 .WithBody(set.Body)
-                .WithParameterList(SyntaxFactory.ParameterList(SyntaxFactory.SeparatedList<ParameterSyntax>(set.Parameters)))
-            ;
+                .WithParameterList(SyntaxFactory.ParameterList(SyntaxFactory.SeparatedList<ParameterSyntax>(set.Parameters)));
     }
 }

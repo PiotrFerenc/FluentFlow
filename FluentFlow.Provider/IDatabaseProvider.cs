@@ -19,7 +19,10 @@ public record Type(ColumnType Value);
 
 public record IsNullable(bool Value);
 
-public record Column(Name Name, Type Type, IsNullable IsNullable, Length Length);
+public record Column(Name Name, Type Type, IsNullable IsNullable, Length Length)
+{
+    public override string ToString() => Name.Value;
+};
 
 public record Length(int? Value);
 

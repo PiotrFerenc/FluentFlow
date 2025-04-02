@@ -17,7 +17,7 @@ public static class ClassBuilder
             .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword));
 
 
-        if (set.Properties.Any())
+        if (set.Properties.Count != 0)
         {
             members.AddRange(set.Properties);
         }
@@ -27,7 +27,7 @@ public static class ClassBuilder
             members.Add(set.Constructor);
         }
 
-        if (set.Methods.Any())
+        if (set.Methods.Count != 0)
         {
             members.AddRange(set.Methods);
         }
