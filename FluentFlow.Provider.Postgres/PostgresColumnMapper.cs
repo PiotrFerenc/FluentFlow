@@ -35,5 +35,10 @@ public class PostgresColumnMapper : IColumnMapper
             ColumnType.Interval => "AsCustom(\"interval\")",
             _ => throw new NotSupportedException($"Unsupported column type: {column.Type.Value}")
         };
+}
 
+
+public class ColumnMapper
+{
+    public string MapColumn(ColumnType type) => "AsInt32().Identity()";
 }

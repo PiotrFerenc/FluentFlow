@@ -8,14 +8,17 @@ public interface IDatabaseProvider
     Task<IEnumerable<Database>> GetDatabases();
     Task<IEnumerable<Table>> GetTables(Database database);
     Task<IEnumerable<Column>> GetColumns(Table table);
-    ColumnType MapType(string type);
+    CSharpType MapType(string type);
 }
 
 public record ConnectionString(string Value);
 
-public record Name(string Value);
+public record Name(string Value)
+{
+    public override string ToString() => Value;
+};
 
-public record Type(ColumnType Value);
+public record Type(CSharpType Value);
 
 public record IsNullable(bool Value);
 

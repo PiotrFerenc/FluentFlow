@@ -19,10 +19,10 @@ public static class Migrator
         var migrationOptions = new MigrationOptions();
         if (BuildConfig(provider, migrationOptions))
         {
-            var migration = new FluentBuilder("Create.Table", true);
+            var migration = new FluentBuilder($"Create.Table(\"{migrationOptions.TableName}\")", true);
             foreach (var column in migrationOptions.Columns)
             {
-                migration.AddStep(column.Name.ToString());
+                migration.AddStep(column.Name.ToString(),Argument.String(column.Name.ToString()));
             }
 
             System.Console.WriteLine(migration.Build().NormalizeWhitespace());
