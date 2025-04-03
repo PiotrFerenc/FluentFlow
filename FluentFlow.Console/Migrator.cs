@@ -1,5 +1,6 @@
 using FluentFlow.Console.Exceptions;
 using FluentFlow.Console.Model;
+using FluentFlow.Core;
 using FluentFlow.Core.Code;
 using FluentFlow.Provider;
 using FluentFlow.Provider.Postgres;
@@ -22,7 +23,8 @@ public static class Migrator
             var migration = new FluentBuilder($"Create.Table(\"{migrationOptions.TableName}\")", true);
             foreach (var column in migrationOptions.Columns)
             {
-                migration.AddStep(column.Name.ToString(),Argument.String(column.Name.ToString()));
+                migration.AddStep("WithColumn", Argument.String(column.Name.ToString()))
+                    .AddStep(ColumnMapper.Map(column.Type.Value));
             }
 
             System.Console.WriteLine(migration.Build().NormalizeWhitespace());
@@ -32,12 +34,6 @@ public static class Migrator
     private static IDatabaseProvider GetProvider(string name) => name switch
     {
         "postgres" => new PostgresDatabaseProvider(),
-        _ => throw new DatabaseProviderNotSupportException(name)
-    };
-
-    private static IColumnMapper GetMapper(string name) => name switch
-    {
-        "postgres" => new PostgresColumnMapper(),
         _ => throw new DatabaseProviderNotSupportException(name)
     };
 
