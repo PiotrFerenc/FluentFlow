@@ -16,7 +16,12 @@ public static class Migrator
     public static void Main(Options options)
     {
         var provider = GetProvider(options.Provider);
-        provider.TryConnect(new ConnectionString(options.ConnectionString)).GetAwaiter().GetResult();
+       var connection =  provider.TryConnect(new ConnectionString(options.ConnectionString)).GetAwaiter().GetResult();
+       if (connection.IsFailed)
+       {
+           AnsiConsole.MarkupLine($"[red]Error:[/] {connection.Error}");
+           return;
+       }
         var migrationOptions = new MigrationOptions();
         if (BuildConfig(provider, migrationOptions))
         {
