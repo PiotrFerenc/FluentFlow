@@ -18,6 +18,8 @@ public class Result<T>
 
     private static Result<T> Success(T value) => new Result<T>(value);
     public static Result<T> Failed(string message) => new Result<T>(message);
-
+    public bool IsSuccess => string.IsNullOrEmpty(Error);
+    public bool IsFailed => !IsSuccess;
     public static implicit operator Result<T>(T value) => Success(value);
+    public static implicit operator Result<T>(string message) => Failed(message);
 }
