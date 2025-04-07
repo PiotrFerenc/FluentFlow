@@ -4,6 +4,7 @@ using FluentFlow.Core;
 using FluentFlow.Core.Code;
 using FluentFlow.Provider;
 using FluentFlow.Provider.Postgres;
+using Humanizer;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -37,7 +38,7 @@ public static class Migrator
 
             var code = ClassBuilder.Build(x =>
             {
-                x.Name = $"{migrationOptions.TableName}Migration";
+                x.Name = $"{migrationOptions.TableName.Pascalize()}Migration";
                 x.Inheritance = "Migration";
                 x.Attributes = [ClassAttributeBuilder.Build("Migration", AttributeArgument.Build((long.Parse(DateTime.Now.ToString("yyyyMMddHHmm")))))];
                 x.Methods =
