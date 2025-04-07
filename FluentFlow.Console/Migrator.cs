@@ -14,6 +14,13 @@ using Table = FluentFlow.Provider.Table;
 
 namespace FluentFlow.Console;
 
+public delegate AttributeArgumentSyntax Identification();
+
+public static class IdentificationStrategy
+{
+    public static AttributeArgumentSyntax DateTimeStamp() => AttributeArgument.Build((long.Parse(DateTime.Now.ToString("yyyyMMddHHmm"))));
+}
+
 public static class Migrator
 {
     public static void Main(Options options)
@@ -40,7 +47,7 @@ public static class Migrator
             {
                 x.Name = $"{migrationOptions.TableName.Pascalize()}Migration";
                 x.Inheritance = "Migration";
-                x.Attributes = [ClassAttributeBuilder.Build("Migration", AttributeArgument.Build((long.Parse(DateTime.Now.ToString("yyyyMMddHHmm")))))];
+                x.Attributes = [ClassAttributeBuilder.Build("Migration", IdentificationStrategy.DateTimeStamp())];
                 x.Methods =
                 [
                     MethodBuilder.Build(m =>
