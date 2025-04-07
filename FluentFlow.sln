@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentFlow.Provider.Postgre
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentFlow.Console", "FluentFlow.Console\FluentFlow.Console.csproj", "{8AA0DF1E-9D26-4561-B54B-49ED27F2CEBF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentFlow.Example", "FluentFlow.Example\FluentFlow.Example.csproj", "{40232BCD-FFD1-4C26-8765-0F0DC3E0A62D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{8AA0DF1E-9D26-4561-B54B-49ED27F2CEBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8AA0DF1E-9D26-4561-B54B-49ED27F2CEBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8AA0DF1E-9D26-4561-B54B-49ED27F2CEBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40232BCD-FFD1-4C26-8765-0F0DC3E0A62D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40232BCD-FFD1-4C26-8765-0F0DC3E0A62D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40232BCD-FFD1-4C26-8765-0F0DC3E0A62D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40232BCD-FFD1-4C26-8765-0F0DC3E0A62D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
