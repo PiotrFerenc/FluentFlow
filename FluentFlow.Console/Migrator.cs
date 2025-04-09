@@ -4,9 +4,7 @@ using FluentFlow.Core;
 using FluentFlow.Core.Code;
 using FluentFlow.Provider;
 using FluentFlow.Provider.Postgres;
-using Humanizer;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Spectre.Console;
 using Name = FluentFlow.Provider.Name;
@@ -44,43 +42,7 @@ public static class Migrator
                     .AddStep(ColumnMapper.Map(column.Type.Value));
             }
 
-            var code = ClassBuilder.Build(x =>
-            {
-                x.Name = $"{migrationOptions.TableName.Pascalize()}{FluentFlowConsts.Migration}";
-                x.Inheritance = FluentFlowConsts.Migration;
-                x.Attributes =
-                    [ClassAttributeBuilder.Build(FluentFlowConsts.Migration, IdentificationStrategy.DateTimeStamp())];
-                x.Methods =
-                [
-                    MethodBuilder.Build(m =>
-                    {
-                        m.Name = FluentFlowConsts.UpMethod;
-                        m.Modifiers =
-                        [
-                            SyntaxKind.PublicKeyword,
-                            SyntaxKind.OverrideKeyword
-                        ];
-                        m.Body = Method.Body(migration.Build());
-                        m.ReturnType = FluentFlowConsts.VoidReturnType;
-                    }),
-
-                    MethodBuilder.Build(m =>
-                    {
-                        m.Name = FluentFlowConsts.DownMethod;
-                        m.Modifiers =
-                        [
-                            SyntaxKind.PublicKeyword,
-                            SyntaxKind.OverrideKeyword
-                        ];
-                        m.ReturnType = FluentFlowConsts.VoidReturnType;
-                        m.Body = Method.Body(
-                            new FluentBuilder("Delete", true)
-                                .AddStep("Table", Argument.String(migrationOptions.TableName))
-                                .Build()
-                        );
-                    })
-                ];
-            });
+            var code = MigrationBuilder.Build(migrationOptions, migration.Build(), IdentificationStrategy.DateTimeStamp);
 
             System.Console.WriteLine(code.NormalizeWhitespace());
         }
