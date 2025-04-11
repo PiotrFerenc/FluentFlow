@@ -13,65 +13,97 @@ namespace FluentFlow.Console;
 
 public static class Migrator
 {
+    private const string CreateTableTemplate = "Create.Table";
+
     public static void Main(Options options)
     {
-        var provider = GetProvider(options.Provider);
-        var connection = provider.TryConnect(new ConnectionString(options.ConnectionString)).GetAwaiter().GetResult();
-        if (connection.IsFailed)
-        {
-            AnsiConsole.MarkupLine($"[red]Error:[/] {connection.Error}");
+        if (!TrySetupConnection(options, out var provider, out var migrationOptions))
             return;
-        }
 
-        var migrationOptions = new MigrationOptions();
-        if (BuildConfig(provider, migrationOptions))
-        {
-            var migration = new FluentBuilder($"Create.Table(\"{migrationOptions.TableName}\")", true);
-            foreach (var column in migrationOptions.Columns)
-            {
-                migration.AddStep("WithColumn", Argument.String(column.Name.ToString()))
-                    .AddStep(ColumnMapper.Map(column.Type.Value));
-            }
+        ConfigureMigration(provider, migrationOptions);
+        var migrationCode = BuildMigrationCode(migrationOptions);
 
-            var code = MigrationBuilder.Build(migrationOptions, migration.Build(), IdentificationStrategy.DateTimeStamp);
-
-            System.Console.WriteLine(code.NormalizeWhitespace());
-        }
+        PrintMigrationCode(migrationCode);
     }
 
-    private static IDatabaseProvider GetProvider(string name) => name switch
+    private static bool TrySetupConnection(Options options, out IDatabaseProvider provider, out MigrationOptions migrationOptions)
+    {
+        provider = GetProvider(options.Provider);
+        var connectionResult = provider.TryConnect(new ConnectionString(options.ConnectionString)).GetAwaiter().GetResult();
+
+        if (connectionResult.IsFailed)
+        {
+            AnsiConsole.MarkupLine($"[red]Error:[/] {connectionResult.Error}");
+            migrationOptions = null;
+            return false;
+        }
+
+        migrationOptions = new MigrationOptions();
+        return true;
+    }
+
+    private static void ConfigureMigration(IDatabaseProvider provider, MigrationOptions options)
+    {
+        SelectDatabase(provider, options);
+        SelectTable(provider, options);
+        LoadColumns(provider, options);
+    }
+
+    private static string BuildMigrationCode(MigrationOptions options)
+    {
+        var migration = new FluentBuilder($"{CreateTableTemplate}(\"{options.TableName}\")", true);
+
+        foreach (var column in options.Columns)
+        {
+            migration.AddStep("WithColumn", Argument.String(column.Name.ToString()))
+                .AddStep(ColumnMapper.Map(column.Type.Value));
+        }
+
+        return MigrationBuilder.Build(options, migration.Build(), IdentificationStrategy.DateTimeStamp)
+            .NormalizeWhitespace().ToString();
+    }
+
+    private static void PrintMigrationCode(string code) =>
+        System.Console.WriteLine(code);
+
+    private static IDatabaseProvider GetProvider(string providerName) => providerName switch
     {
         "postgres" => new PostgresDatabaseProvider(),
-        _ => throw new DatabaseProviderNotSupportException(name)
+        _ => throw new DatabaseProviderNotSupportException(providerName)
     };
 
-    private static readonly Func<IDatabaseProvider, MigrationOptions, bool> BuildConfig = (provider, options) =>
-        GetDatabase!(provider, options) | GetTables!(provider, options) | GetColumns!(provider, options);
-
-    private static readonly Func<IDatabaseProvider, MigrationOptions, bool> GetColumns = (provider, options) =>
+    private static void LoadColumns(IDatabaseProvider provider, MigrationOptions options)
     {
-        options.Columns = provider.GetColumns(new Table(new Name(options.TableName))).GetAwaiter().GetResult();
-        return true;
-    };
+        options.Columns = provider.GetColumns(new Table(new Name(options.TableName)))
+            .GetAwaiter()
+            .GetResult();
+    }
 
-    private static readonly Func<IDatabaseProvider, MigrationOptions, bool> GetTables = (provider, options) =>
+    private static void SelectTable(IDatabaseProvider provider, MigrationOptions options)
     {
-        var tables = provider.GetTables(new Database(new Name(options.DatabaseName))).GetAwaiter().GetResult();
-        var selectedTable = AnsiConsole.Prompt(new SelectionPrompt<string>().Title("Select table")
-            .MoreChoicesText("[grey](Move up and down to reveal more choices)[/]")
-            .AddChoices(tables.Select(x => x.Name.Value)));
-        options.TableName = selectedTable;
-        return true;
-    };
+        var tables = provider.GetTables(new Database(new Name(options.DatabaseName)))
+            .GetAwaiter()
+            .GetResult();
 
-    private static readonly Func<IDatabaseProvider, MigrationOptions, bool> GetDatabase = (provider, options) =>
+        options.TableName = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("Select table")
+                .MoreChoicesText("[grey](Move up and down to reveal more choices)[/]")
+                .AddChoices(tables.Select(x => x.Name.Value))
+        );
+    }
+
+    private static void SelectDatabase(IDatabaseProvider provider, MigrationOptions options)
     {
-        var databases = provider.GetDatabases().GetAwaiter().GetResult();
-        var databaseName = AnsiConsole.Prompt(new SelectionPrompt<string>().Title("Select database")
-            .MoreChoicesText("[grey](Move up and down to reveal more choices)[/]")
-            .AddChoices(databases.Select(x => x.Name.Value)));
+        var databases = provider.GetDatabases()
+            .GetAwaiter()
+            .GetResult();
 
-        options.DatabaseName = databaseName;
-        return true;
-    };
+        options.DatabaseName = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("Select database")
+                .MoreChoicesText("[grey](Move up and down to reveal more choices)[/]")
+                .AddChoices(databases.Select(x => x.Name.Value))
+        );
+    }
 }
