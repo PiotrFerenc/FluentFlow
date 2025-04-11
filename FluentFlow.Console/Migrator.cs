@@ -5,20 +5,11 @@ using FluentFlow.Core.Code;
 using FluentFlow.Provider;
 using FluentFlow.Provider.Postgres;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Spectre.Console;
 using Name = FluentFlow.Provider.Name;
 using Table = FluentFlow.Provider.Table;
 
 namespace FluentFlow.Console;
-
-public delegate AttributeArgumentSyntax Identification();
-
-public static class IdentificationStrategy
-{
-    public static AttributeArgumentSyntax DateTimeStamp() =>
-        AttributeArgument.Build((long.Parse(DateTime.Now.ToString("yyyyMMddHHmm"))));
-}
 
 public static class Migrator
 {
