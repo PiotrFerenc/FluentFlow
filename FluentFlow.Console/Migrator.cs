@@ -13,7 +13,6 @@ namespace FluentFlow.Console;
 
 public static class Migrator
 {
-    private const string CreateTableTemplate = "Create.Table";
 
     public static void Main(Options options)
     {
@@ -51,7 +50,7 @@ public static class Migrator
 
     private static string BuildMigrationCode(MigrationOptions options)
     {
-        var migration = new FluentBuilder($"{CreateTableTemplate}(\"{options.TableName}\")", true);
+        var migration = new FluentBuilder($"{FluentFlowConsts.CreateTableTemplate}(\"{options.TableName}\")", true);
 
         foreach (var column in options.Columns)
         {
@@ -59,8 +58,7 @@ public static class Migrator
                 .AddStep(ColumnMapper.Map(column.Type.Value));
         }
 
-        return MigrationBuilder.Build(options, migration.Build(), IdentificationStrategy.DateTimeStamp)
-            .NormalizeWhitespace().ToString();
+        return MigrationBuilder.Build(options, migration.Build(), IdentificationStrategy.DateTimeStamp).NormalizeWhitespace().ToString();
     }
 
     private static void PrintMigrationCode(string code) =>

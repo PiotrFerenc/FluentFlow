@@ -5,6 +5,5 @@ namespace FluentFlow.Console;
 
 public static class IdentificationStrategy
 {
-    public static AttributeArgumentSyntax DateTimeStamp() =>
-        AttributeArgument.Build((long.Parse(DateTime.Now.ToString("yyyyMMddHHmm"))));
+    public static AttributeArgumentSyntax DateTimeStamp() => AttributeArgument.Build((long.Parse(DateTime.Now.ToString("yyyyMMddHHmm"))));
 }

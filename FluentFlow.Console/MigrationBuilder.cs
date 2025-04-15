@@ -16,7 +16,7 @@ public static class MigrationBuilder
             x.Name = $"{migrationOptions.TableName.Pascalize()}{FluentFlowConsts.Migration}";
             x.Inheritance = FluentFlowConsts.Migration;
             x.Attributes =
-                [ClassAttributeBuilder.Build(FluentFlowConsts.Migration, IdentificationStrategy.DateTimeStamp())];
+                [ClassAttributeBuilder.Build(FluentFlowConsts.Migration, identification())];
             x.Methods =
             [
                 MethodBuilder.Build(m =>
